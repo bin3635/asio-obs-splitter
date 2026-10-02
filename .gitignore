@@ -7,6 +7,8 @@ build/
 build_*/
 out/
 bin/
+staging/
+*.zip
 
 # CMake generated files
 CMakeCache.txt

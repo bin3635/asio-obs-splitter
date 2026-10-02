@@ -1,0 +1,71 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Package (Windows x64)
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -B build -A x64
+
+      - name: Build with CMake (Release)
+        run: cmake --build build --config Release --parallel
+
+      - name: Prepare Package and Zip
+        shell: pwsh
+        run: |
+          $stagingDir = "staging"
+          New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
+
+          # 빌드 산출물 복사
+          Copy-Item "build\proxy-asio\Release\ProxyAsio64.dll" "$stagingDir\" -Force
+          Copy-Item "build\obs-plugin\Release\obs-asio-splitter.dll" "$stagingDir\" -Force
+          Copy-Item "build\tray\Release\AsioSplitterTray.exe" "$stagingDir\" -Force
+
+          # 설치 및 안내 스크립트 복사
+          Copy-Item "install.cmd" "$stagingDir\" -Force
+          Copy-Item "install.ps1" "$stagingDir\" -Force
+          Copy-Item "uninstall.cmd" "$stagingDir\" -Force
+          Copy-Item "uninstall.ps1" "$stagingDir\" -Force
+          Copy-Item "README.md" "$stagingDir\" -Force
+          Copy-Item "INSTALL.md" "$stagingDir\" -Force
+
+          # 압축 파일 이름 결정
+          $refName = "${{ github.ref_name }}"
+          if ($refName -match '^v[0-9]') {
+              $zipName = "asio-obs-splitter-$refName.zip"
+          } else {
+              $zipName = "asio-obs-splitter-windows-x64.zip"
+          }
+
+          Compress-Archive -Path "$stagingDir\*" -DestinationPath $zipName -Force
+          Write-Host "Created archive: $zipName"
+          "ZIP_NAME=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ZIP_NAME }}
+          path: ${{ env.ZIP_NAME }}
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP_NAME }}
+          generate_release_notes: true

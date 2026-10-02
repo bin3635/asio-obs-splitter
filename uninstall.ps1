@@ -4,7 +4,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$proxyDll = Join-Path $scriptRoot 'build\proxy-asio\Release\ProxyAsio64.dll'
+$proxyDll = if (Test-Path (Join-Path $scriptRoot 'ProxyAsio64.dll')) {
+    Join-Path $scriptRoot 'ProxyAsio64.dll'
+} else {
+    Join-Path $scriptRoot 'build\proxy-asio\Release\ProxyAsio64.dll'
+}
 $programFiles64 = if ($env:ProgramW6432) { $env:ProgramW6432 } else { $env:ProgramFiles }
 
 function Assert-Administrator {

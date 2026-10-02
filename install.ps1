@@ -4,9 +4,17 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$proxyDll = Join-Path $scriptRoot 'build\proxy-asio\Release\ProxyAsio64.dll'
-$pluginDll = Join-Path $scriptRoot 'build\obs-plugin\Release\obs-asio-splitter.dll'
-$trayExe = Join-Path $scriptRoot 'build\tray\Release\AsioSplitterTray.exe'
+function Find-BinaryFile([string]$fileName, [string]$buildSubPath) {
+    $directPath = Join-Path $scriptRoot $fileName
+    if (Test-Path $directPath) { return $directPath }
+    $buildPath = Join-Path $scriptRoot $buildSubPath
+    if (Test-Path $buildPath) { return $buildPath }
+    return $directPath
+}
+
+$proxyDll = Find-BinaryFile 'ProxyAsio64.dll' 'build\proxy-asio\Release\ProxyAsio64.dll'
+$pluginDll = Find-BinaryFile 'obs-asio-splitter.dll' 'build\obs-plugin\Release\obs-asio-splitter.dll'
+$trayExe = Find-BinaryFile 'AsioSplitterTray.exe' 'build\tray\Release\AsioSplitterTray.exe'
 $programFiles64 = if ($env:ProgramW6432) { $env:ProgramW6432 } else { $env:ProgramFiles }
 
 function Assert-Administrator {
