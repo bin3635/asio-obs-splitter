@@ -1,0 +1,75 @@
+# Prerequisites & Dependencies exceptions
+!deps/
+!deps/**
+
+# Build artifacts and directories
+build/
+build_*/
+out/
+bin/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Visual Studio & MSVC files
+.vs/
+*.sln.docstates
+*.user
+*.userosscache
+*.sln.cache
+*.suo
+*.VC.db
+*.VC.opendb
+*.opendb
+ipch/
+*.obj
+*.o
+*.ilk
+*.exp
+*.pdb
+*.lib
+*.idb
+*.tlog
+*.manifest
+*.res
+*.pch
+*.lastbuildstate
+
+# Build output binaries
+*.dll
+*.exe
+
+# Re-include exceptions in deps
+!deps/**/obs.lib
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# CLion & JetBrains IDEs
+.idea/
+cmake-build-*/
+
+# Operating System specific
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporary & Log files
+*.log
+*.tmp
+*.bak
