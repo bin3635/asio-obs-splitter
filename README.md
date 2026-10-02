@@ -72,7 +72,7 @@ asio-obs-splitter/
 
 1. 저장소를 클론합니다.
    ```powershell
-   git clone https://github.com/your-repo/asio-obs-splitter.git
+   git clone https://github.com/bin3635/asio-obs-splitter.git
    cd asio-obs-splitter
    ```
 
