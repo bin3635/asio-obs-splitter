@@ -44,25 +44,32 @@ jobs:
           Copy-Item "README.md" "$stagingDir\" -Force
           Copy-Item "INSTALL.md" "$stagingDir\" -Force
 
-          # 압축 파일 이름 결정
+          # 패키지 및 압축 파일 이름 결정
           $refName = "${{ github.ref_name }}"
           if ($refName -match '^v[0-9]') {
-              $zipName = "asio-obs-splitter-$refName.zip"
+              $packageName = "asio-obs-splitter-$refName"
           } else {
-              $zipName = "asio-obs-splitter-windows-x64.zip"
+              $packageName = "asio-obs-splitter-windows-x64"
           }
+          $zipName = "$packageName.zip"
 
+          # GitHub Release용 단일 ZIP 생성
           Compress-Archive -Path "$stagingDir\*" -DestinationPath $zipName -Force
           Write-Host "Created archive: $zipName"
+
+          "PACKAGE_NAME=$packageName" | Out-File -FilePath $env:GITHUB_ENV -Append
           "ZIP_NAME=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
 
+      # GitHub Actions Run 요약 페이지에서 다운로드하는 Artifact
+      # 폴더(staging/)를 지정하면 GitHub가 이를 zip으로 다운로드하므로 이중 압축(zip in zip)이 방지됩니다.
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ZIP_NAME }}
-          path: ${{ env.ZIP_NAME }}
+          name: ${{ env.PACKAGE_NAME }}
+          path: staging/
           if-no-files-found: error
 
+      # GitHub Releases 태그 배포 시 첨부되는 사전 압축 ZIP 파일
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
