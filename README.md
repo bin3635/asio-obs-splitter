@@ -8,7 +8,7 @@
 
 ## 📌 개요 (Overview)
 
-일반적으로 게임(특히 EZ2ON, DJMAX 등 리듬게임)이나 DAW(Cubase, Ableton, FL Studio 등)에서 **ASIO 독점 모드(Exclusive Mode)**를 사용할 경우, Windows 오디오 믹서를 거치지 않고 오디오 인터페이스로 오디오를 직접 출력하기 때문에 일반적인 데스크톱 오디오 캡처나 스테레오 믹스 방식으로는 **OBS Studio에서 게임 소리를 캡처할 수 없는 문제**가 발생합니다.
+일반적으로 게임(특히 EZ2ON, DJMAX 등 리듬게임)이나 DAW(Cubase, Ableton, FL Studio 등)에서 ASIO 독점 모드(Exclusive Mode)를 사용할 경우, Windows 오디오 믹서를 거치지 않고 오디오 인터페이스로 오디오를 직접 출력하기 때문에 일반적인 데스크톱 오디오 캡처나 스테레오 믹스 방식으로는 **OBS Studio에서 게임 소리를 캡처할 수 없는 문제**가 발생합니다.
 
 **ASIO OBS Splitter**는 이 문제를 해결하기 위해 고안되었습니다.
 1. 게임/DAW에는 일반 ASIO 드라이버인 `Proxy ASIO (OBS Splitter)`로 인식됩니다.
@@ -113,14 +113,14 @@ asio-obs-splitter/
 ### 2. OBS Studio 설정
 1. OBS Studio를 실행합니다.
 2. 오디오를 입력받을 씬(Scene)의 **소스 목록**에서 `+` 버튼을 누릅니다.
-3. 목록에서 **`ASIO Proxy Capture`**를 선택하여 추가합니다.
+3. 목록에서 `ASIO Proxy Capture`를 선택하여 추가합니다.
 4. 추가 후 OBS 오디오 믹서에 새 소스가 등록되었는지 확인합니다.
 
 ### 3. 게임 / DAW 설정
 1. 게임(예: EZ2ON) 또는 DAW의 오디오 설정 메뉴로 이동합니다.
-2. 출력 드라이버로 **`Proxy ASIO (OBS Splitter)`**를 선택합니다.
+2. 출력 드라이버로 `Proxy ASIO (OBS Splitter)`를 선택합니다.
 3. 드라이버가 초기화되면 작업 표시줄 트레이 영역에 **ASIO Splitter 트레이 아이콘**이 나타납니다.
-4. 트레이 아이콘을 **우클릭**하여 실제 소리를 재생할 **오디오 인터페이스 드라이버(예: Audient USB Audio ASIO Driver 등)**를 체크합니다.
+4. 트레이 아이콘을 **우클릭**하여 실제 소리를 재생할 오디오 인터페이스 드라이버(예: Audient USB Audio ASIO Driver 등)를 체크합니다.
 5. 이제 헤드폰으로는 지연 없는 소리가 재생되고, 동시에 OBS Studio의 `ASIO Proxy Capture` 볼륨 미터가 움직이는 것을 확인할 수 있습니다.
 
 ## 🗑️ 제거 방법 (Uninstallation)
