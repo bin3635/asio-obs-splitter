@@ -68,7 +68,7 @@ asio-obs-splitter/
 - **OBS Studio**: 64비트 버전 (30.x 이상 권장)
 - **오디오 인터페이스**: 공식 ASIO 드라이버를 지원하는 오디오 인터페이스
 
-## 🔨 빌드 방법 (Build Guide)
+## 🔨 직접 빌드하기 (Build Guide)
 
 1. 저장소를 클론합니다.
    ```powershell
@@ -97,15 +97,22 @@ asio-obs-splitter/
 > [!IMPORTANT]
 > 설치나 제거를 진행하기 전에 **OBS Studio**와 **ASIO를 사용하는 게임/DAW**를 완전히 종료하세요.
 
-### 1. 설치 스크립트 실행
-저장소 루트에 있는 `install.cmd`를 실행합니다 (UAC 관리자 권한 승인 필요).
+### 1. 설치
 
-스크립트가 자동으로 다음 작업을 처리합니다:
-1. `ProxyAsio64.dll`을 Windows 64비트 COM 및 ASIO 드라이버로 등록 (`regsvr32`)
-2. `obs-asio-splitter.dll`을 OBS 플러그인 폴더(`C:\Program Files\obs-studio\obs-plugins\64bit`)에 복사
-3. `AsioSplitterTray.exe`를 `C:\Program Files\ASIO OBS Splitter\`에 설치
+#### 방법 A. 배포 패키지 사용 (권장)
+1. [Releases](https://github.com/bin3635/asio-obs-splitter/releases) 페이지에서 최신 `asio-obs-splitter-v*.zip`을 다운로드하고 압축을 풉니다.
+2. 압축 해제한 폴더 내의 **`install.cmd`**를 실행합니다 (UAC 관리자 권한 승인).
 
-> **OBS를 다른 경로에 설치한 경우:**
+#### 방법 B. 소스 코드 직접 빌드 후 설치
+1. 위의 **🔨 직접 빌드하기** 가이드를 따라 빌드를 완료합니다.
+2. 저장소 루트에서 **`install.cmd`**를 실행합니다.
+
+> 스크립트가 다음 작업을 자동으로 처리합니다:
+> 1. `ProxyAsio64.dll`을 Windows 64비트 COM 및 ASIO 드라이버로 등록 (`regsvr32`)
+> 2. `obs-asio-splitter.dll`을 OBS 플러그인 폴더(`C:\Program Files\obs-studio\obs-plugins\64bit`)에 복사
+> 3. `AsioSplitterTray.exe`를 `C:\Program Files\ASIO OBS Splitter\`에 설치
+>
+> **OBS를 기본 경로 외 다른 경로에 설치한 경우:**
 > ```powershell
 > powershell.exe -ExecutionPolicy Bypass -File .\install.ps1 -ObsPath "D:\Apps\obs-studio"
 > ```
@@ -125,7 +132,7 @@ asio-obs-splitter/
 
 ## 🗑️ 제거 방법 (Uninstallation)
 
-저장소 루트의 `uninstall.cmd`를 관리자 권한으로 실행합니다.
+압축을 푼 폴더(또는 저장소 루트)의 `uninstall.cmd`를 관리자 권한으로 실행합니다.
 
 ```powershell
 .\uninstall.cmd
@@ -133,6 +140,11 @@ asio-obs-splitter/
 - 등록된 Proxy ASIO COM 드라이버 레지스트리가 해제됩니다.
 - OBS 플러그인 DLL 및 트레이 프로그램 파일이 깔끔하게 삭제됩니다.
 - 기존에 설치되어 있던 하드웨어 오디오 인터페이스 드라이버 정보는 전혀 손상되지 않습니다.
+
+> **OBS를 기본 경로 외 다른 경로에 설치했던 경우:**
+> ```powershell
+> powershell.exe -ExecutionPolicy Bypass -File .\uninstall.ps1 -ObsPath "D:\Apps\obs-studio"
+> ```
 
 ## 💡 주의 사항 및 팁 (Notes & Troubleshooting)
 

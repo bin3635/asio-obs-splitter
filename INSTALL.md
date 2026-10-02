@@ -1,10 +1,13 @@
 # 설치 안내
 
-## 빌드
+## 빌드 (직접 빌드하는 경우)
 
-먼저 Release 구성으로 빌드합니다.
+> ※ GitHub Releases에서 사전 빌드된 ZIP 패키지를 다운로드한 경우, 빌드 과정을 건너뛰고 바로 아래 **설치** 단계로 진행하세요.
+
+Release 구성으로 빌드합니다.
 
 ```powershell
+cmake -B build -A x64
 cmake --build build --config Release
 ```
 
@@ -12,7 +15,7 @@ cmake --build build --config Release
 
 ## 설치
 
-저장소 루트에서 `install.cmd`를 실행합니다. Windows가 관리자 권한을
+압축을 푼 폴더(또는 저장소 루트)에서 `install.cmd`를 실행합니다. Windows가 관리자 권한을
 요청하면 승인하세요. 스크립트가 다음 작업을 자동으로 처리합니다.
 
 1. 64비트 `regsvr32`로 `ProxyAsio64.dll`을 등록합니다.
@@ -45,4 +48,4 @@ OBS 설치 경로가 기본 경로가 아닌 경우:
 powershell.exe -ExecutionPolicy Bypass -File .\uninstall.ps1 -ObsPath "D:\Apps\obs-studio"
 ```
 
-이 스크립트는 Audient 등록 정보나 다른 ASIO 드라이버는 삭제하지 않습니다.
+이 스크립트는 다른 ASIO 드라이버는 삭제하지 않습니다.
