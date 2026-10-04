@@ -4,12 +4,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$proxyDll = if (Test-Path (Join-Path $scriptRoot 'ProxyAsio64.dll')) {
-    Join-Path $scriptRoot 'ProxyAsio64.dll'
-} else {
-    Join-Path $scriptRoot 'build\proxy-asio\Release\ProxyAsio64.dll'
-}
 $programFiles64 = if ($env:ProgramW6432) { $env:ProgramW6432 } else { $env:ProgramFiles }
+$installDirectory = Join-Path $programFiles64 'ASIO OBS Splitter'
+$proxyDll = Join-Path $installDirectory 'ProxyAsio64.dll'
 
 function Assert-Administrator {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -48,7 +45,7 @@ $proxyRegistryPaths = @(
     'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{A5C8E531-9F22-4D9A-8C37-F79526C8D8E1}'
 )
 if (Test-Path $proxyDll) {
-    $unregistration = Start-Process -FilePath $regsvr32 -ArgumentList @('/u', '/s', $proxyDll) -Wait -PassThru
+    $unregistration = Start-Process -FilePath $regsvr32 -ArgumentList "/u /s `"$proxyDll`"" -Wait -PassThru
     if ($unregistration.ExitCode -ne 0) {
         throw "Proxy ASIO unregistration failed with exit code $($unregistration.ExitCode)."
     }

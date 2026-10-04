@@ -67,7 +67,20 @@ if (Get-Process obs64 -ErrorAction SilentlyContinue) {
     throw 'OBS is running. Close OBS before installing the plugin.'
 }
 
-$registration = Start-Process -FilePath $regsvr32 -ArgumentList @('/s', $proxyDll) -Wait -PassThru
+$installDirectory = Join-Path $programFiles64 'ASIO OBS Splitter'
+$installedProxyDll = Join-Path $installDirectory 'ProxyAsio64.dll'
+$installedTrayExe = Join-Path $installDirectory 'AsioSplitterTray.exe'
+$legacyStartupShortcut = Join-Path ([Environment]::GetFolderPath('Startup')) 'ASIO OBS Splitter.lnk'
+
+if (Test-Path $legacyStartupShortcut) {
+    Remove-Item -LiteralPath $legacyStartupShortcut -Force
+}
+
+New-Item -ItemType Directory -Path $installDirectory -Force | Out-Null
+Copy-Item $proxyDll $installedProxyDll -Force
+Copy-Item $trayExe $installedTrayExe -Force
+
+$registration = Start-Process -FilePath $regsvr32 -ArgumentList "/s `"$installedProxyDll`"" -Wait -PassThru
 if ($registration.ExitCode -ne 0) {
     throw "Proxy ASIO registration failed with exit code $($registration.ExitCode)."
 }
@@ -77,15 +90,6 @@ Copy-Item $pluginDll $obsPluginPath -Force
 if (-not (Test-Path $obsPluginPath)) {
     throw "OBS plugin was not copied to: $obsPluginPath"
 }
-
-$installDirectory = Join-Path $programFiles64 'ASIO OBS Splitter'
-$installedTrayExe = Join-Path $installDirectory 'AsioSplitterTray.exe'
-$legacyStartupShortcut = Join-Path ([Environment]::GetFolderPath('Startup')) 'ASIO OBS Splitter.lnk'
-if (Test-Path $legacyStartupShortcut) {
-    Remove-Item -LiteralPath $legacyStartupShortcut -Force
-}
-New-Item -ItemType Directory -Path $installDirectory -Force | Out-Null
-Copy-Item $trayExe $installedTrayExe -Force
 
 Write-Host 'Proxy ASIO driver registered.' -ForegroundColor Green
 Write-Host "OBS plugin installed to: $obsPluginPath" -ForegroundColor Green
